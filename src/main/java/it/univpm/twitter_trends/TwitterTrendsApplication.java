@@ -1,5 +1,6 @@
 package it.univpm.twitter_trends;
 
+import it.univpm.twitter_trends.models.Metadata;
 import it.univpm.twitter_trends.models.Trend;
 import it.univpm.twitter_trends.models.TrendList;
 import org.springframework.boot.SpringApplication;
@@ -8,11 +9,10 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @SpringBootApplication
@@ -27,25 +27,39 @@ public class TwitterTrendsApplication {
 
     @GetMapping("/twittertrends/home")
     public String homePage(Model model){
+        model.addAttribute("trends", getTrends());
         return "home";
     }
 
     @GetMapping("/trends")
     public String trends(){
-        RestTemplate rt = new RestTemplateBuilder().build();
-
-        ResponseEntity<Trend[]> response =
-                rt.getForEntity(
-                        API_URL,
-                        Trend[].class);
-
-        Trend[] trends = response.getBody();
-
         StringBuilder output = new StringBuilder();
-        for (Trend t : trends){
+        for (Trend t : getTrends()){
             output.append(t.toString());
         }
         return output.toString();
     }
 
+    private Trend[] getTrends(){
+        RestTemplate rt = new RestTemplateBuilder().build();
+        ResponseEntity<Trend[]> response =
+                rt.getForEntity(
+                        API_URL,
+                        Trend[].class);
+
+        return response.getBody();
+    }
+
+
+    @GetMapping("/twittertrends/api/trends")
+    @ResponseBody
+    public TrendList getTrendList() {
+        return new TrendList(getTrends());
+    }
+
+    @GetMapping("/twittertrends/api/metadata")
+    @ResponseBody
+    public Object getMetadata() {
+        return Metadata.get(Trend.class);
+    }
 }

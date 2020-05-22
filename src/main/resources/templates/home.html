@@ -14,8 +14,8 @@
         <div class="main">
             <div class="section">
                 <div class="title">API REST</div>
-                <div class="btn">Metadati</div>
-                <div class="btn">Dati</div>
+                <div class="btn" onclick="window.open('./api/metadata')">Metadati</div>
+                <div class="btn" onclick="window.open('./api/trends')">Dati</div>
             </div>
             <div class="section">
                 <div class="title">Filtra</div>
@@ -24,7 +24,22 @@
                     <div class="btn">OK</div>
                     <!-- TODO: icona lente + twitter-->
                 </div>
-
+            </div>
+            <div class="section">
+                <table>
+                    <thead>
+                        <th>Nazione</th>
+                        <th>Cod.Nazione</th>
+                        <th>Nome</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="t: ${trends}">
+                            <td th:text="${t.country}"></td>
+                            <td th:text="${t.countryCode}"></td>
+                            <td th:text="${t.name}"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="footer">

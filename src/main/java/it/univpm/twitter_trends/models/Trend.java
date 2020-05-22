@@ -1,10 +1,6 @@
 package it.univpm.twitter_trends.models;
-
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /*
             "country": "Sweden",
@@ -25,13 +21,15 @@ public class Trend {
     public String countryCode;
     public String name;
     public int parentid;
+    public PlaceType placeType;
+    public String url;
+    public int woeid;
 
-    public String toString(){
-        return "{\n\tcountry:" + country +
-                "\n\tcountryCode" + countryCode +
-                "\n\tname" + name
-                + "}";
+    public class PlaceType {
+        public int code;
+        public String name;
     }
+
 }
 
 
