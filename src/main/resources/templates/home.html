@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitter Trends</title>
+    <link href="/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="text">Twitter Trends</div>
+        </div>
+
+        <div class="main">
+            <div class="section">
+                <div class="title">API REST</div>
+                <div class="btn">Metadati</div>
+                <div class="btn">Dati</div>
+            </div>
+            <div class="section">
+                <div class="title">Filtra</div>
+                <div class="row">
+                    <input th:type="text"/>
+                    <div class="btn">OK</div>
+                    <!-- TODO: icona lente + twitter-->
+                </div>
+
+            </div>
+        </div>
+        <div class="footer">
+            <span>Progetto per Programmazione ad Oggetti, di Manuel Mariani AA:19/20</span>
+        </div>
+    </div>
+</body>
+</html>
