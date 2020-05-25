@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.xml.crypto.Data;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,9 +21,11 @@ import java.util.List;
 public class TwitterTrendsApplication {
     public static final String API_URL = "https://wd4hfxnxxa.execute-api.us-east-2.amazonaws.com/" +
                                          "dev/api/1.1/trends/available.json";
+    private static DataStorer dataStorer = new DataStorer(24, "./data/");
 
     public static void main(String[] args) {
         SpringApplication.run(TwitterTrendsApplication.class, args);
+        dataStorer.start();
     }
 
     @GetMapping("/twittertrends/home")
@@ -40,7 +43,19 @@ public class TwitterTrendsApplication {
         return output.toString();
     }
 
-    private Trend[] getTrends(){
+    @GetMapping("/twittertrends/api/trends")
+    @ResponseBody
+    public static TrendList getTrendList() {
+        return new TrendList(getTrends());
+    }
+
+    @GetMapping("/twittertrends/api/metadata")
+    @ResponseBody
+    public Object getMetadata() {
+        return Metadata.get(Trend.class);
+    }
+
+    private static Trend[] getTrends(){
         RestTemplate rt = new RestTemplateBuilder().build();
         ResponseEntity<Trend[]> response =
                 rt.getForEntity(
@@ -50,16 +65,4 @@ public class TwitterTrendsApplication {
         return response.getBody();
     }
 
-
-    @GetMapping("/twittertrends/api/trends")
-    @ResponseBody
-    public TrendList getTrendList() {
-        return new TrendList(getTrends());
-    }
-
-    @GetMapping("/twittertrends/api/metadata")
-    @ResponseBody
-    public Object getMetadata() {
-        return Metadata.get(Trend.class);
-    }
 }
