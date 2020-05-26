@@ -1,6 +1,9 @@
 package it.univpm.twitter_trends.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /*
             "country": "Sweden",
             "countryCode": "SE",

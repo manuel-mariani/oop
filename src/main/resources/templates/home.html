@@ -14,11 +14,11 @@
         <div class="main">
             <div class="section">
                 <div class="title">API REST</div>
-                <div class="btn" onclick="window.open('./api/metadata')">Metadati</div>
+                <div class="btn" onclick="window.open('./api/metadata')">Metadata</div>
                 <div class="btn" onclick="window.open('./api/trends')">Dati</div>
             </div>
             <div class="section">
-                <div class="title">Filtra</div>
+                <div class="title">Filter</div>
                 <div class="row">
                     <input th:type="text"/>
                     <div class="btn">OK</div>
@@ -28,22 +28,34 @@
             <div class="section">
                 <table>
                     <thead>
-                        <th>Nazione</th>
-                        <th>Cod.Nazione</th>
-                        <th>Nome</th>
+                        <th th:each="md: ${metadata}">
+                            <div class="tableheader">
+                                <div class="field" th:text='${md.get("field")}'></div>
+                                <div class="meaning" th:text='${md.get("meaning")}'></div>
+                            </div>
+                        </th>
                     </thead>
                     <tbody>
                         <tr th:each="t: ${trends}">
                             <td th:text="${t.country}"></td>
                             <td th:text="${t.countryCode}"></td>
                             <td th:text="${t.name}"></td>
+                            <td th:text="${t.parentid}"></td>
+                            <td>
+                                <table>
+                                    <tr><td th:text="${t.placeType.code}"></td></tr>
+                                    <tr><td th:text="${t.placeType.name}"></td></tr>
+                                </table>
+                            </td>
+                            <td th:text="${t.url}"></td>
+                            <td th:text="${t.woeid}"></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="footer">
-            <span>Progetto per Programmazione ad Oggetti, di Manuel Mariani AA:19/20</span>
+            <span>Project for Object Oriented Programming, Manuel Mariani AA:19/20 UNIVPM</span>
         </div>
     </div>
 </body>

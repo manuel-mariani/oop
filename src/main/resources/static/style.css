@@ -55,6 +55,35 @@ body{
     padding-left: 8px;
 }
 
+/*  TABLE   */
+table{
+    border-collapse: collapse;
+}
+thead, th, td{
+    border: solid 1px;
+}
+td, th{
+    padding: 4px;
+}
+th{
+    height: 100%;
+}
+.tableheader{
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+.field {
+    text-transform: uppercase;
+}
+.meaning {
+    font-size: 12px;
+    font-weight: 100;
+}
+table table{
+    width: 100%;
+}
+
 /*------------------- FOOTER -------------------*/
 .footer {
     box-sizing: border-box;
@@ -63,7 +92,7 @@ body{
     bottom: 0;
     left: 0;
     margin: 0;
-    padding: 4px 8px 4px 8px;
+    padding: 4px 8px 4px 16px;
     color: gray;
 }
 .footer > span{

@@ -1,6 +1,7 @@
 package it.univpm.twitter_trends;
 
 import it.univpm.twitter_trends.models.Metadata;
+import it.univpm.twitter_trends.models.StringMatrix;
 import it.univpm.twitter_trends.models.Trend;
 import it.univpm.twitter_trends.models.TrendList;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.xml.crypto.Data;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class TwitterTrendsApplication {
     @GetMapping("/twittertrends/home")
     public String homePage(Model model){
         model.addAttribute("trends", getTrends());
+        model.addAttribute("metadata", Metadata.getMetadataNoType(Trend.class));
         return "home";
     }
 

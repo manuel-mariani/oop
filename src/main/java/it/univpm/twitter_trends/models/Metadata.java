@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,11 +16,11 @@ public class Metadata {
         String value() default "";
     }
 
-    public static Object get(Class className) {
+    public static HashMap<String, Object> get(Class className) {
         // Get fields and nested classes in the class
         Field[] fields = className.getFields();
         Class[] classes = className.getClasses();
-        LinkedList<Object> meta = new LinkedList<>();
+        LinkedList<HashMap> meta = new LinkedList<>();
 
         for (Field f : fields){
             // Check if field is also nested
@@ -30,7 +31,7 @@ public class Metadata {
             }
 
             // Init the details of the field, starting with its name
-            HashMap<Object, Object> entry = new HashMap<>();
+            HashMap<String, Object> entry = new HashMap<>();
             entry.put("field", f.getName());
 
             // Get the field annotation
@@ -49,10 +50,23 @@ public class Metadata {
         }
 
         // Map of the final item "classname" : {details list}
-        HashMap<Object, Object> item = new HashMap<>();
+        HashMap<String, Object> item = new HashMap<>();
         item.put("class:", className.getName());
         item.put("fields:", meta);
 
         return item;
+    }
+
+    public static List<HashMap<String, String>> getMetadataNoType(Class className){
+        List<HashMap<String, String>> meta = new LinkedList<>();
+        for (Field f : className.getFields()){
+            HashMap<String, String> map = new HashMap<>();
+            map.put("field", f.getName());
+            Meaning ann = f.getAnnotation(Meaning.class);
+            if (ann != null)
+                map.put("meaning", ann.value());
+            meta.add(map);
+        }
+        return meta;
     }
 }
