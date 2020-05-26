@@ -26,4 +26,9 @@ public class TrendList {
     public TrendList(Trend[] trends){
         this.trends = Arrays.asList(trends);
     }
+
+    public TrendList filter(){
+        return null;
+    }
+
 }

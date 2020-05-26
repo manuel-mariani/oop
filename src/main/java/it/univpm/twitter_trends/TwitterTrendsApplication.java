@@ -1,7 +1,6 @@
 package it.univpm.twitter_trends;
 
 import it.univpm.twitter_trends.models.Metadata;
-import it.univpm.twitter_trends.models.StringMatrix;
 import it.univpm.twitter_trends.models.Trend;
 import it.univpm.twitter_trends.models.TrendList;
 import org.springframework.boot.SpringApplication;
@@ -13,11 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.xml.crypto.Data;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
 @SpringBootApplication
 @Controller
 public class TwitterTrendsApplication {
@@ -27,12 +21,15 @@ public class TwitterTrendsApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TwitterTrendsApplication.class, args);
-        dataStorer.start();
+        Filter filter = new Filter<>(getTrendsFromURL()[0]);
+        filter.setExpression("parentid:$lte:0");
+        System.out.println(filter.filter());
+        //dataStorer.start();   //TODO: remove comment
     }
 
     @GetMapping("/twittertrends/home")
     public String homePage(Model model){
-        model.addAttribute("trends", getTrends());
+        model.addAttribute("trends", getTrendsFromURL());
         model.addAttribute("metadata", Metadata.getMetadataNoType(Trend.class));
         return "home";
     }
@@ -40,7 +37,7 @@ public class TwitterTrendsApplication {
     @GetMapping("/trends")
     public String trends(){
         StringBuilder output = new StringBuilder();
-        for (Trend t : getTrends()){
+        for (Trend t : getTrendsFromURL()){
             output.append(t.toString());
         }
         return output.toString();
@@ -49,16 +46,16 @@ public class TwitterTrendsApplication {
     @GetMapping("/twittertrends/api/trends")
     @ResponseBody
     public static TrendList getTrendList() {
-        return new TrendList(getTrends());
+        return new TrendList(getTrendsFromURL());
     }
 
     @GetMapping("/twittertrends/api/metadata")
     @ResponseBody
-    public Object getMetadata() {
+    public static Object getMetadata() {
         return Metadata.get(Trend.class);
     }
 
-    private static Trend[] getTrends(){
+    private static Trend[] getTrendsFromURL(){
         RestTemplate rt = new RestTemplateBuilder().build();
         ResponseEntity<Trend[]> response =
                 rt.getForEntity(
