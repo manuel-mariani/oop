@@ -1,8 +1,6 @@
 package it.univpm.twitter_trends.models;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.LinkedList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
             "country": "Sweden",
@@ -31,7 +29,7 @@ public class Trend {
     @Metadata.Meaning("")
     public int parentid;
 
-    @Metadata.Meaning("Tipologia di località")
+    @Metadata.Meaning("Tipologia di località (code - name)")
     public PlaceType placeType;
 
     @Metadata.Meaning("URL del luogo sulle API Yahoo Where")

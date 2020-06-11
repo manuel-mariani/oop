@@ -8,7 +8,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="text">Twitter Trends</div>
+            <a class="text" th:href="home">Twitter Trends</a>
         </div>
 
         <div class="main">
@@ -19,11 +19,12 @@
             </div>
             <div class="section">
                 <div class="title">Filter</div>
-                <div class="row">
-                    <input th:type="text"/>
-                    <div class="btn">OK</div>
+                <form class="row" method="get">
+                    <input th:type="text" id="expression" name="expression" th:value="${query}"/>
+                    <input th:type="submit" class="btn" th:value="OK"/>
                     <!-- TODO: icona lente + twitter-->
-                </div>
+                </form>
+                <div class="errorbox" th:text="${error_msg}"></div>
             </div>
             <div class="section">
                 <table>
@@ -41,11 +42,7 @@
                             <td th:text="${t.countryCode}"></td>
                             <td th:text="${t.name}"></td>
                             <td th:text="${t.parentid}"></td>
-                            <td>
-                                <table>
-                                    <tr><td th:text="${t.placeType.code}"></td></tr>
-                                    <tr><td th:text="${t.placeType.name}"></td></tr>
-                                </table>
+                            <td th:text="${t.placeType.code + ' - ' + t.placeType.name}">
                             </td>
                             <td th:text="${t.url}"></td>
                             <td th:text="${t.woeid}"></td>

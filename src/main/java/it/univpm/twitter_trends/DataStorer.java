@@ -1,19 +1,12 @@
 package it.univpm.twitter_trends;
 
-import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import it.univpm.twitter_trends.models.TrendList;
-import jdk.jfr.internal.LogTag;
-import jdk.jfr.internal.Logger;
-import org.springframework.util.ResourceUtils;
+import it.univpm.twitter_trends.models.TrendCollection;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.Executors;
@@ -38,7 +31,7 @@ public class DataStorer {
     private Runnable storeService = new Runnable() {
         public void run() {
 
-            TrendList trends = TwitterTrendsApplication.getTrendList();
+            TrendCollection trends = TwitterTrendsApplication.getTrendList();
             try {
                 File directory = Paths.get(path).toFile();
                 directory.mkdir();
@@ -55,7 +48,7 @@ public class DataStorer {
         }
 
         private String fileName(){
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd--HH-mm-ss");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             return dtf.format(LocalDateTime.now()) + ".json";
         }
     };

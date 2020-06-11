@@ -1,20 +1,18 @@
 package it.univpm.twitter_trends;
 
-import java.lang.reflect.Field;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-class Filter<T> {
+class Filter_LEGACY<T> {
     T object;
     Operator operator;
 
-    Filter(T object){
+    Filter_LEGACY(T object){
         this.object = object;
     }
-    Filter(T object, String expression){
+    Filter_LEGACY(T object, String expression){
         this.object = object;
         setExpression(expression);
     }
@@ -58,8 +56,9 @@ class Filter<T> {
             if (s[1].startsWith("$gte"))  return new GTE(fieldName, splitFirst(s[1], ":")[1]);
             if (s[1].startsWith("$gt" ))  return new GT (fieldName, splitFirst(s[1], ":")[1]);
 
-            if (s[1].startsWith("$in" ))  return new IN (fieldName, Arrays.asList(
-                    strBetween(s[1], "[","]").split(",")));
+            String[] arguments = strBetween(s[1], "[","]").split(",");
+            if (s[1].startsWith("$in" ))  return new IN (fieldName, Arrays.asList(arguments));
+            if (s[1].startsWith("$nin"))  return new NIN(fieldName, Arrays.asList(arguments));
         }
         else {
             if (s[0].startsWith("$and"))  return new AND(parseList(s[1]));
