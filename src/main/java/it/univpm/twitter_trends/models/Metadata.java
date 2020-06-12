@@ -1,20 +1,18 @@
 package it.univpm.twitter_trends.models;
 
-import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Metadata {
+@Retention(RetentionPolicy.RUNTIME)
+@interface Meaning {
+    String value() default "";
+}
 
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface Meaning {
-        String value() default "";
-    }
+public class Metadata {
 
     public static HashMap<String, Object> get(Class className) {
         // Get fields and nested classes in the class
