@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class DataManagerService {
     public static final String API_URL =
             "https://wd4hfxnxxa.execute-api.us-east-2.amazonaws.com/dev/api/1.1/trends/available.json";
-    static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
@@ -31,7 +33,7 @@ public class DataManagerService {
     private ObjectWriter objectWriter = objectMapper.writer(new DefaultPrettyPrinter());
 
     HashMap<String, TrendCollection> cachedTrendCollections = new HashMap<>();
-
+    private Set<String> availableDates = new TreeSet<>();
 
     private String path;
     private long period;
@@ -48,7 +50,7 @@ public class DataManagerService {
             RestTemplate rt = new RestTemplateBuilder().build();
             ResponseEntity<Trend[]> trendsResponse = rt.getForEntity(API_URL, Trend[].class);
             TrendCollection trendsCollection = new TrendCollection(trendsResponse.getBody());
-
+            trendsCollection.setDate(DTF.format(LocalDateTime.now()));
             cachedTrendCollections.put(fileNameNow(), trendsCollection);
 
             try {
@@ -59,6 +61,7 @@ public class DataManagerService {
                 file.createNewFile();
 
                 objectWriter.writeValue(file, trendsCollection);
+                updateAvailableDates();
                 System.out.println("File successfully saved at " + file.getAbsolutePath());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -85,7 +88,6 @@ public class DataManagerService {
             try {
                 File file = Paths.get(path + date + ".json").toFile();
                 TrendCollection tc = objectMapper.readValue(file, TrendCollection.class);
-
                 cachedTrendCollections.put(date, tc);  //TODO max cache size
                 return tc;
             } catch (Exception e) {
@@ -101,6 +103,10 @@ public class DataManagerService {
     }
 
     public TrendCollection getFilteredTrendCollection(String date, String expression) throws Exception{
+        if (date == null || date.equals(""))
+            date = DTF.format(LocalDateTime.now());
+        if (expression == null || expression.equals(""))
+            return getTrendCollection(date);
         Collection<Trend> trendList = getTrendCollection(date).trends;
         CollectionFilter<Trend> collectionFilter = new CollectionFilter<>(trendList, expression);
         Collection<Trend> res = collectionFilter.getFiltered();
@@ -110,4 +116,14 @@ public class DataManagerService {
     public TrendCollection getFilteredTrendCollection(String expression) throws Exception{
         return getFilteredTrendCollection(DTF.format(LocalDateTime.now()), expression);
     }
+
+    private void updateAvailableDates(){
+        File[] availableFiles = Paths.get(path).toFile().listFiles();
+        if (availableFiles == null) return;
+        for(File f : availableFiles) {
+            availableDates.add(f.getName().replaceAll(".json", ""));
+        }
+    }
+
+    public Set<String> getAvailableDates() { return availableDates; }
 }

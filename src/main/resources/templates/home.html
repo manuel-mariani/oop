@@ -15,22 +15,26 @@
             <div class="section">
                 <div class="title">API REST</div>
                 <div class="btn" onclick="window.open('./api/metadata')">Metadata</div>
-                <div class="btn" onclick="window.open('./api/trends')">Dati</div>
+                <div class="btn" onclick="window.open('./api/trends')">Data</div>
             </div>
             <div class="section">
                 <div class="title">Filter</div>
                 <form class="row" method="get">
+                    <select name="date" id="date">
+                        <option th:each="ad: ${availableDates}" th:selected="${ad == selectedDate}"
+                                th:value="${ad}" th:text="${ad}"></option>
+                    </select>
                     <input th:type="text" id="expression" name="expression" th:value="${query}"/>
                     <input th:type="submit" class="btn" th:value="OK"/>
                     <!-- TODO: icona lente + twitter-->
                 </form>
-                <div class="errorbox" th:text="${error_msg}"></div>
+                <div class="error-box" th:text="${errorMsg}"></div>
             </div>
             <div class="section">
                 <table>
                     <thead>
                         <th th:each="md: ${metadata}">
-                            <div class="tableheader">
+                            <div class="table-header">
                                 <div class="field" th:text='${md.get("field")}'></div>
                                 <div class="meaning" th:text='${md.get("meaning")}'></div>
                             </div>
@@ -42,9 +46,10 @@
                             <td th:text="${t.countryCode}"></td>
                             <td th:text="${t.name}"></td>
                             <td th:text="${t.parentid}"></td>
-                            <td th:text="${t.placeType.code + ' - ' + t.placeType.name}">
+                            <td th:text="${t.placeType.code + ' - ' + t.placeType.name}"></td>
+                            <td>
+                                <a th:href="${t.url}" th:text="${t.url}"></a>
                             </td>
-                            <td th:text="${t.url}"></td>
                             <td th:text="${t.woeid}"></td>
                         </tr>
                     </tbody>

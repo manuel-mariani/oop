@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
+
 @SpringBootApplication
 @Controller
 public class TwitterTrendsApplication {
@@ -23,23 +25,28 @@ public class TwitterTrendsApplication {
 
     @GetMapping("/twittertrends/home")
     public String homePage(Model model){
-        model.addAttribute("trends", DMS.getTrendCollection().trends);
+        TrendCollection trendCollection = DMS.getTrendCollection();
+        model.addAttribute("trends", trendCollection.trends);
         model.addAttribute("metadata", Metadata.getMetadataNoType(Trend.class));
+        model.addAttribute("availableDates", DMS.getAvailableDates());
+        model.addAttribute("selectedDate", trendCollection.dateString);
         return "home";
     }
 
-    @GetMapping(value = "/twittertrends/home", params = {"expression"})
+    @GetMapping(value = "/twittertrends/home", params = {"date", "expression"})
     public String homePage(Model model,
+                           @RequestParam("date") String date,
                            @RequestParam("expression") String expression){
-        if (expression == null || expression.equals("")) return homePage(model);
         try {
-            TrendCollection filtered = DMS.getFilteredTrendCollection(expression);
+            TrendCollection filtered = DMS.getFilteredTrendCollection(date, expression);
             model.addAttribute("trends", filtered.trends);
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("error_msg", e.getMessage());
+            model.addAttribute("errorMsg", e.getMessage());
         } finally {
             model.addAttribute("query", expression);
+            model.addAttribute("availableDates", DMS.getAvailableDates());
+            model.addAttribute("selectedDate", date);
             model.addAttribute("metadata", Metadata.getMetadataNoType(Trend.class));
         }
         return "home";
@@ -57,14 +64,18 @@ public class TwitterTrendsApplication {
         return Metadata.get(Trend.class);
     }
 
-    @GetMapping("/twittertrends/filter/trends")
+    @GetMapping(value = "/twittertrends/api/trends", params = {"date", "expression"})
     @ResponseBody
-    public static Object getFilteredTrends(@RequestParam String expression){
+    public static Object getFilteredTrends(@RequestParam("date") String date,
+                                           @RequestParam("expression") String expression){
+
         try {
-            return DMS.getFilteredTrendCollection(expression);
+            return DMS.getFilteredTrendCollection(date, expression);
         } catch (Exception e) {
             e.printStackTrace();
-            return e.toString();
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("errorMsg", e.getMessage());
+            return hashMap;
         }
     }
 

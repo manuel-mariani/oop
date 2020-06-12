@@ -16,12 +16,8 @@ public class TrendCollection {
     public Collection<Trend> trends;
 
     public TrendCollection(Collection<Trend> trends, String dateString){
-        this.dateString = dateString;
         this.trends = trends;
-
-        year  = Integer.parseInt(dateString.split("-")[0]);
-        month = Integer.parseInt(dateString.split("-")[1]);
-        day   = Integer.parseInt(dateString.split("-")[2]);
+        setDate(dateString);
     }
 
     public TrendCollection(Trend[] trends){
@@ -30,5 +26,13 @@ public class TrendCollection {
 
     public TrendCollection(){
         super();
+    }
+
+    public void setDate(String dateString){
+        this.dateString = dateString;
+
+        year  = Integer.parseInt(dateString.split("-")[0]);
+        month = Integer.parseInt(dateString.split("-")[1]);
+        day   = Integer.parseInt(dateString.split("-")[2]);
     }
 }

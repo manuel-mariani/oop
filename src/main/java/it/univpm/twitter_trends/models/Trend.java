@@ -4,31 +4,31 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties
 public class Trend {
-    @Meaning("Paese di provenienza")
+    @Meaning("Country of origin")
     public String country;
 
-    @Meaning("Codice identificativo paese")
+    @Meaning("Country identifier")
     public String countryCode;
 
-    @Meaning("Nome luogo")
+    @Meaning("Name of location")
     public String name;
 
     @Meaning("")
     public int parentid;
 
-    @Meaning("Tipologia di località (code - name)")
+    @Meaning("Location type (code - name)")
     public PlaceType placeType;
 
-    @Meaning("URL del luogo sulle API Yahoo Where")
+    @Meaning("Location's URL on Yahoo Where API")
     public String url;
 
-    @Meaning("Where On Earth IDentifier, id della posizione")
+    @Meaning("Where On Earth IDentifier, id of position")
     public int woeid;
 
     public class PlaceType {
-        @Meaning("Codice tipologia luogo")
+        @Meaning("Location type code")
         public int code;
-        @Meaning("Nome tipologia")
+        @Meaning("Location type name")
         public String name;
     }
 

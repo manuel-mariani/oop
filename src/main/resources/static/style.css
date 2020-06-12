@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300&display=swap');
-@import url(https://fonts.googleapis.com/css?family=Oxygen+Mono:400);
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 
 body{
     font-family: 'Open Sans', sans-serif;
@@ -49,43 +49,57 @@ body{
     border: solid 1px;
     border-radius: 4px;
     padding: 4px 8px 4px 8px;
-    margin-right: 8px;
 }
-.row > input{
+.row > input, select{
     border: solid 1px;
     border-radius: 4px;
     padding: 8px;
+    font-family: "Roboto Mono", monospace;
 }
 .row > input[type='text']{
-    font-family: "Oxygen Mono", monospace;
     flex-grow: 1;
 }
-.row > input[type='submit']{
+.row > input{
     margin: 0 0 0 4px;
+}
+.error-box{
+    color: #FF4136;
+    padding-bottom: 8px;
 }
 
 /*  TABLE   */
 table{
     border-collapse: collapse;
+    /*border-spacing: 0;*/
+    /*border: solid 1px;*/
+    /*border-radius: 4px;*/
 }
 thead, th, td{
     border: solid 1px;
 }
-td, th{
+td{
     padding: 4px;
 }
 th{
     height: 100%;
+    padding: 8px;
 }
-.tableheader{
+tr a{
+    font-size: 12px;
+    color: #0074D9;
+    font-weight: 300;
+}
+.table-header{
     display: table;
     height: 100%;
     width: 100%;
 }
 .field {
-    text-transform: uppercase;
+    font-family: "Roboto Mono", monospace;
+    /*text-transform: uppercase;*/
 }
 .meaning {
+    margin-top: 4px;
     font-size: 12px;
     font-weight: 100;
 }
