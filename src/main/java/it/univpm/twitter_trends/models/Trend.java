@@ -16,7 +16,7 @@ public class Trend {
     @Meaning("")
     public int parentid;
 
-    @Meaning("Location type (code - name)")
+    @Meaning("Location type (.code - .name)")
     public PlaceType placeType;
 
     @Meaning("Location's URL on Yahoo Where API")

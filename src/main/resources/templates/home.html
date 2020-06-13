@@ -24,7 +24,7 @@
                         <option th:each="ad: ${availableDates}" th:selected="${ad == selectedDate}"
                                 th:value="${ad}" th:text="${ad}"></option>
                     </select>
-                    <input th:type="text" id="expression" name="expression" th:value="${query}"/>
+                    <input th:type="text" id="expression" name="filter" th:value="${query}"/>
                     <input th:type="submit" class="btn" th:value="OK"/>
                     <!-- TODO: icona lente + twitter-->
                 </form>

@@ -27,11 +27,13 @@ public class DataManagerService {
             "https://wd4hfxnxxa.execute-api.us-east-2.amazonaws.com/dev/api/1.1/trends/available.json";
     public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private ScheduledExecutorService scheduler =
-            Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    // Json mappers
     private ObjectMapper objectMapper = new ObjectMapper();
     private ObjectWriter objectWriter = objectMapper.writer(new DefaultPrettyPrinter());
 
+    // Trends saved in memory and available dates for the user to choose
     HashMap<String, TrendCollection> cachedTrendCollections = new HashMap<>();
     private Set<String> availableDates = new TreeSet<>();
 
@@ -46,20 +48,22 @@ public class DataManagerService {
 
     private Runnable storeService = new Runnable() {
         public void run() {
-
+            // Get json object from the URL and build object
             RestTemplate rt = new RestTemplateBuilder().build();
             ResponseEntity<Trend[]> trendsResponse = rt.getForEntity(API_URL, Trend[].class);
             TrendCollection trendsCollection = new TrendCollection(trendsResponse.getBody());
+            // Set current date in the object and save to cache
             trendsCollection.setDate(DTF.format(LocalDateTime.now()));
             cachedTrendCollections.put(fileNameNow(), trendsCollection);
 
             try {
+                // Get directory and file. If not present, create them
                 File directory = Paths.get(path).toFile();
                 directory.mkdir();
-
                 File file = Paths.get(path + fileNameNow()).toFile();
                 file.createNewFile();
 
+                // Write object to files and update the available dates
                 objectWriter.writeValue(file, trendsCollection);
                 updateAvailableDates();
                 System.out.println("File successfully saved at " + file.getAbsolutePath());
@@ -82,8 +86,10 @@ public class DataManagerService {
     }
 
     public TrendCollection getTrendCollection(String date){
+        // If the trends of the selected date is present in cache, retrieve it directly
         if (cachedTrendCollections.get(date) != null)
             return cachedTrendCollections.get(date);
+        // Else read it from file (if present), save it to cache and return it
         else {
             try {
                 File file = Paths.get(path + date + ".json").toFile();
@@ -103,13 +109,17 @@ public class DataManagerService {
     }
 
     public TrendCollection getFilteredTrendCollection(String date, String expression) throws Exception{
+        // If date and expression or expression are null, rispectively set date to current or return unfiltered
         if (date == null || date.equals(""))
             date = DTF.format(LocalDateTime.now());
         if (expression == null || expression.equals(""))
             return getTrendCollection(date);
+
+        // Create the filtered colletion using the Filter
         Collection<Trend> trendList = getTrendCollection(date).trends;
         CollectionFilter<Trend> collectionFilter = new CollectionFilter<>(trendList, expression);
         Collection<Trend> res = collectionFilter.getFiltered();
+
         return new TrendCollection(res, date);
     }
 

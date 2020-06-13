@@ -25,23 +25,25 @@ public class TwitterTrendsApplication {
 
     @GetMapping("/twittertrends/home")
     public String homePage(Model model){
+        // Get unfiltered trends and add data and meta to model
         TrendCollection trendCollection = DMS.getTrendCollection();
         model.addAttribute("trends", trendCollection.trends);
         model.addAttribute("metadata", Metadata.getMetadataNoType(Trend.class));
+        // Add dates and available and selected dates
         model.addAttribute("availableDates", DMS.getAvailableDates());
         model.addAttribute("selectedDate", trendCollection.dateString);
         return "home";
     }
 
-    @GetMapping(value = "/twittertrends/home", params = {"date", "expression"})
+    @GetMapping(value = "/twittertrends/home", params = {"date", "filter"})
     public String homePage(Model model,
                            @RequestParam("date") String date,
-                           @RequestParam("expression") String expression){
+                           @RequestParam("filter") String expression){
         try {
             TrendCollection filtered = DMS.getFilteredTrendCollection(date, expression);
             model.addAttribute("trends", filtered.trends);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO: remove
             model.addAttribute("errorMsg", e.getMessage());
         } finally {
             model.addAttribute("query", expression);
@@ -64,15 +66,14 @@ public class TwitterTrendsApplication {
         return Metadata.get(Trend.class);
     }
 
-    @GetMapping(value = "/twittertrends/api/trends", params = {"date", "expression"})
+    @GetMapping(value = "/twittertrends/api/trends", params = {"date", "filter"})
     @ResponseBody
     public static Object getFilteredTrends(@RequestParam("date") String date,
-                                           @RequestParam("expression") String expression){
-
+                                           @RequestParam("filter") String expression){
         try {
             return DMS.getFilteredTrendCollection(date, expression);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO: remove
             HashMap<String, String> hashMap = new HashMap<>();
             hashMap.put("errorMsg", e.getMessage());
             return hashMap;

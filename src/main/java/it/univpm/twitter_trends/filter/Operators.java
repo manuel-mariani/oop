@@ -8,23 +8,30 @@ abstract class Operator{
     abstract boolean isTrue(Object target) throws Exception;
 
     static int compare(Object o1, Object o2) throws Exception {
+        // Init and null target exception avoidance
         String s2 = (String) o2;
         if (o1 == null)  o1 = "";
+        // If o1 is string, compare the two strings
         if (o1 instanceof String)
             return s2.equals(o1) ? 0 : -1;
+        // If o1 is number, compare the two numbers,
+        // assuming o2 is a string containing only numerics (else throws exception)
         if (o1 instanceof Number){
             Number n1 = (Number) o1;
             Number n2 = NumberFormat.getInstance().parse(s2);
             return Double.compare(n1.doubleValue(), n2.doubleValue());
         }
+        // Exception management
         if (o2 == null) throw new Exception("Comparison argument null");
         throw new Exception("Comparison error, check if all fields are comparable");
     }
 
     static Object getFieldValue(Object target, String fieldName) throws Exception{
+        // Split fieldName by '.'
         String[] subFieldsNames = fieldName.split("\\.");
         Object subFieldValue = target;
         try {
+            // Iterate through subfields
             for (String sfn : subFieldsNames)
                 subFieldValue = subFieldValue.getClass().getField(sfn).get(subFieldValue);
         } catch (Exception ignored){
@@ -34,12 +41,12 @@ abstract class Operator{
     }
 }
 
-class ArithmeticOP extends Operator {
+class ComparisonOP extends Operator {
     String type;
     String fieldName;
     Object argument;
 
-    ArithmeticOP(String type, String fieldName, Object argument){
+    ComparisonOP(String type, String fieldName, Object argument){
         this.type      = type;
         this.fieldName = fieldName;
         this.argument  = argument;
