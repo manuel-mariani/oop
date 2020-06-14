@@ -1,4 +1,3 @@
-#Twitter trends app
 ## Introduction
 This application operates as a Java web server using Spring framework, and its main purpose is to view and analyze past
 and current Twitter trends (provided by this [API](https://developer.twitter.com/en/docs/trends/locations-with-trending-topics/api-reference/get-trends-available)).
@@ -18,12 +17,12 @@ Name | Description | Type
 /twittertrends/api/data | Returns all the trends of the current day | GET
 /twittertrends/api/data?date=\[dateString]&filter=\[filterExpression] | returns the trends filtered by date and expression | GET
 /twittertrends/api/metadata | returns the metadata of the trends model | GET
-#### Notes:
+##### Notes:
 - The parameter \[dateString] has to be in format 'yyyy-MM-dd'
 - If in the query string the date is not present, the returned trends will be of the current day.
 - If in the query string the filter expression is not present, the returned trends will be unfiltered.
 
-## Filters
+### Filters
 Operator | Description |  Usage| Type
 ------------ | -------------  | ------------- | -------------  
 $and | Is true only if all argument expressions are true | `$and: [<expression_1>, ..., <expression_n>]` | Logical 
@@ -39,7 +38,8 @@ $bt | Is true if the field value is between the arguments | `<fieldName> : $bt: 
 $in | Is true if the field is any of the arguments | `<fieldName> : $in: [<value_1>, ..., <value_n>]` | Set
 $nin | Is true if the field is not any of the arguments | `<fieldName> : $nin: [<value_1>, ..., <value_n>]` | Set
 . | Access a sub field in a field | `<fieldName>.<subFieldName>`|Pseudo-operator 
-####Notes:
+
+#####Notes:
 - The filter expressions are case sensitive.
 - The filter expressions can be separated by any amount of spaces.
 - If a value contains spaces, it has to be delimited by quotation marks.
@@ -51,9 +51,9 @@ $nin | Is true if the field is not any of the arguments | `<fieldName> : $nin: [
 Filter trend by the location's country
 2. `$and: [countryCode: $in: [IT, EN, US], placeType.name = Town]`  
 Get trends of locations that are towns and have a country code IT or EN or US
-3. `$or: [country: $in:[Italy, France, "United Kingdom"], placeType.code = 12]`  
-Get trends of locations that are either in Italy, France or United Kingdom, or that have a place type code equal to 12 (which corresponds to the type 'Country')
-
+3. `{"$or": {["country": {"$in": {["Italy", "France", "United Kingdom"]}, "placeType.code" = 12]}`  
+Get trends of locations that are either in Italy, France or United Kingdom, or that have a place type code equal to 12 (which corresponds to the type 'Country').
+Note that the query is in JSON format
 
 ## Frontend
 The frontend design is very simple and barebone, without compromising on functionalities and ease of use.
@@ -67,6 +67,14 @@ It's built using HTML and CSS as the view part, Thymeleaf as a very simple contr
 ![Use case diagram](/readme_assets/Use_case.png)
 
 ## UML Class diagram
+#### Main package
+![src package uml](/readme_assets/UML_Packages/src.png)
+#### Models package
+![models package uml](/readme_assets/UML_Packages/Models.png)
+#### Filter package
+![filter package uml](/readme_assets/UML_Packages/Filter.png)
+#### All
+![all classes uml](/readme_assets/UML_Packages/GLOBAL.png)
 
 ## Calls structure
 ## Filter design 
