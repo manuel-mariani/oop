@@ -1,0 +1,12 @@
+actor User
+
+User->TwitterTrendsApplication:getMetadata()
+activate TwitterTrendsApplication
+
+TwitterTrendsApplication->Metadata:get(Trend.class)
+activate Metadata
+Metadata->TwitterTrendsApplication: HashMap<String, Object>
+deactivate Metadata
+
+TwitterTrendsApplication->User:HashMap<String, Object>
+deactivate TwitterTrendsApplication

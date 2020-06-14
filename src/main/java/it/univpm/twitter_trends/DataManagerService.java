@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -85,7 +86,7 @@ public class DataManagerService {
         return DTF.format(LocalDateTime.now()) + ".json";
     }
 
-    public TrendCollection getTrendCollection(String date){
+    public TrendCollection getTrendCollection(String date) throws Exception {
         // If the trends of the selected date is present in cache, retrieve it directly
         if (cachedTrendCollections.get(date) != null)
             return cachedTrendCollections.get(date);
@@ -96,14 +97,13 @@ public class DataManagerService {
                 TrendCollection tc = objectMapper.readValue(file, TrendCollection.class);
                 cachedTrendCollections.put(date, tc);  //TODO max cache size
                 return tc;
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException e) {
+                throw new Exception("Trends of "+ date+ " not found");
             }
-            return null; //TODO exception
         }
     }
 
-    public TrendCollection getTrendCollection(){
+    public TrendCollection getTrendCollection() throws Exception{
         String date = DTF.format(LocalDateTime.now());
         return getTrendCollection(date);
     }

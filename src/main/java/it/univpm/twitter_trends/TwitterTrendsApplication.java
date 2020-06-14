@@ -25,13 +25,18 @@ public class TwitterTrendsApplication {
 
     @GetMapping("/twittertrends/home")
     public String homePage(Model model){
-        // Get unfiltered trends and add data and meta to model
-        TrendCollection trendCollection = DMS.getTrendCollection();
-        model.addAttribute("trends", trendCollection.trends);
-        model.addAttribute("metadata", Metadata.getMetadataNoType(Trend.class));
-        // Add dates and available and selected dates
-        model.addAttribute("availableDates", DMS.getAvailableDates());
-        model.addAttribute("selectedDate", trendCollection.dateString);
+        try {
+            // Get unfiltered trends and add data and meta to model
+            TrendCollection trendCollection = DMS.getTrendCollection();
+            model.addAttribute("trends", trendCollection.trends);
+            model.addAttribute("selectedDate", trendCollection.dateString);
+        } catch (Exception e) {
+            model.addAttribute("errorMsg", e.getMessage());
+        } finally {
+            model.addAttribute("metadata", Metadata.getMetadataNoType(Trend.class));
+            // Add dates and available and selected dates
+            model.addAttribute("availableDates", DMS.getAvailableDates());
+        }
         return "home";
     }
 
@@ -43,7 +48,6 @@ public class TwitterTrendsApplication {
             TrendCollection filtered = DMS.getFilteredTrendCollection(date, expression);
             model.addAttribute("trends", filtered.trends);
         } catch (Exception e) {
-            e.printStackTrace(); // TODO: remove
             model.addAttribute("errorMsg", e.getMessage());
         } finally {
             model.addAttribute("query", expression);
@@ -56,8 +60,14 @@ public class TwitterTrendsApplication {
 
     @GetMapping("/twittertrends/api/trends")
     @ResponseBody
-    public static TrendCollection getTrendList() {
-        return DMS.getTrendCollection();
+    public static Object getTrendList() {
+        try {
+            return DMS.getTrendCollection();
+        } catch (Exception e) {
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("errorMsg", e.getMessage());
+            return hashMap;
+        }
     }
 
     @GetMapping("/twittertrends/api/metadata")
@@ -73,11 +83,11 @@ public class TwitterTrendsApplication {
         try {
             return DMS.getFilteredTrendCollection(date, expression);
         } catch (Exception e) {
-            e.printStackTrace(); //TODO: remove
             HashMap<String, String> hashMap = new HashMap<>();
             hashMap.put("errorMsg", e.getMessage());
             return hashMap;
         }
     }
+
 
 }

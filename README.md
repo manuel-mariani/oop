@@ -14,8 +14,8 @@ Name | Description | Type
 ------------ | -------------  | ------------- 
 /twittertrends/home | Shows the home webpage, with the current day trends in a table | HTML
 /twittertrends/home?date=\[dateString]&filter=\[filterExpression] | Shows the home webpage, with the filtered trends by date and expression in a table | HTML
-/twittertrends/api/data | Returns all the trends of the current day | GET
-/twittertrends/api/data?date=\[dateString]&filter=\[filterExpression] | returns the trends filtered by date and expression | GET
+/twittertrends/api/trends | Returns all the trends of the current day | GET
+/twittertrends/api/trends?date=\[dateString]&filter=\[filterExpression] | returns the trends filtered by date and expression | GET
 /twittertrends/api/metadata | returns the metadata of the trends model | GET
 ##### Notes:
 - The parameter \[dateString] has to be in format 'yyyy-MM-dd'
@@ -39,7 +39,8 @@ $in | Is true if the field is any of the arguments | `<fieldName> : $in: [<value
 $nin | Is true if the field is not any of the arguments | `<fieldName> : $nin: [<value_1>, ..., <value_n>]` | Set
 . | Access a sub field in a field | `<fieldName>.<subFieldName>`|Pseudo-operator 
 
-#####Notes:
+
+####Notes:
 - The filter expressions are case sensitive.
 - The filter expressions can be separated by any amount of spaces.
 - If a value contains spaces, it has to be delimited by quotation marks.
@@ -76,5 +77,17 @@ It's built using HTML and CSS as the view part, Thymeleaf as a very simple contr
 #### All
 ![all classes uml](/readme_assets/UML_Packages/GLOBAL.png)
 
-## Calls structure
+## Call sequence diagrams
+#### Home page (HTML) `/home`
+![homePage sequence](/readme_assets/UML_Sequences/homePage.png)
+#### Home page filtered `/home?date=[dateString]&filter=[filterExpression]` (HTML)
+![homePageFilter sequence](/readme_assets/UML_Sequences/homePageFilter.png)
+#### Get Metadata `/api/metadata` (GET)
+![metadata sequence](/readme_assets/UML_Sequences/getMetadata.png)
+#### Get Trends `/api/trends` and Get Filtered Trends `/api/trends?date=[dateString]&filter=[filterExpression]` (GET)
+The sequences for these REST calls are the same as the html correspectives, with the main difference that the data is 
+returned in the HTTP response body as JSON instead of being formatted in the html page.  
+Also in these calls, the returned object does not include the metadata and in case of an exception
+the returned object is the exception message.
+
 ## Filter design 

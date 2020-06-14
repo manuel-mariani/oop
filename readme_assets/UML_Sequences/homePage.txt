@@ -1,0 +1,37 @@
+actor User
+participant TwitterTrendsApplication
+participant DataManagerService
+
+User->TwitterTrendsApplication:homePage()
+activate TwitterTrendsApplication
+
+TwitterTrendsApplication->DataManagerService:getTrendCollection()
+activate DataManagerService
+
+DataManagerService->DataManagerService: getTrendCollection(currentDate)
+activate DataManagerService
+alt cachedTrendCollection[currentDate] == null
+
+DataManagerService->DataManagerService: //Read trends from file currentDate.json, then add them to cache
+activate DataManagerService
+space 
+deactivate DataManagerService
+end
+
+DataManagerService-->TwitterTrendsApplication: cachedTrendCollection[currentDate]
+deactivate DataManagerService
+
+space 
+deactivate DataManagerService
+space 
+
+
+
+TwitterTrendsApplication->Metadata:getMetadataNoType(Trend.class)
+activate Metadata
+Metadata-->TwitterTrendsApplication:List<HashMap<String,String>>
+deactivate Metadata
+
+TwitterTrendsApplication->User:home.html
+deactivate TwitterTrendsApplication
+

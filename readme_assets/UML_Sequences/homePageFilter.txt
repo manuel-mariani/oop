@@ -1,0 +1,75 @@
+
+actor User
+participant TwitterTrendsApplication
+participant DataManagerService
+
+User->TwitterTrendsApplication:homePage(date, filter)
+
+alt try
+TwitterTrendsApplication ->DataManagerService:getFilteredTrendsCollection(date, filter)
+activate TwitterTrendsApplication
+activate DataManagerService
+
+DataManagerService->DataManagerService: getTrendCollection(date)
+activate DataManagerService
+space 
+deactivate DataManagerService
+
+DataManagerService->*CollectionFilter: <<create>>
+activate CollectionFilter
+CollectionFilter->Parser: parse(filter)
+activate Parser
+
+Parser->Parser:cleanExpression(filter)
+activate Parser
+space 
+deactivate Parser
+
+Parser->Parser:_parse(filter)
+activate Parser
+Parser->*Operator:<<create>>
+Operator-->Parser:Operator
+space 
+deactivate Parser
+Parser-->CollectionFilter:Operator
+deactivate Parser
+
+CollectionFilter-->DataManagerService: CollectionFilter
+deactivate CollectionFilter
+
+
+DataManagerService->CollectionFilter:getFiltered()
+activate CollectionFilter
+CollectionFilter-->DataManagerService:Collection<Trends>
+deactivate CollectionFilter
+
+DataManagerService-->TwitterTrendsApplication: TrendCollection
+deactivate DataManagerService
+
+else catch Exception
+TwitterTrendsApplication->TwitterTrendsApplication: //Add exception message to html
+activate TwitterTrendsApplication
+space 
+deactivate TwitterTrendsApplication
+end
+
+TwitterTrendsApplication->Metadata:getMetadataNoType(Trend.class)
+activate Metadata
+activate TwitterTrendsApplication
+Metadata-->TwitterTrendsApplication:List<HashMap<String,String>>
+deactivate Metadata
+deactivate TwitterTrendsApplication
+
+
+TwitterTrendsApplication-->User:home.html
+deactivate TwitterTrendsApplication
+
+
+
+
+
+
+
+
+
+
