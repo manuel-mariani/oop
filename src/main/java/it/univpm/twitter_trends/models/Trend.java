@@ -22,7 +22,7 @@ public class Trend {
     @Meaning("Location's URL on Yahoo Where API")
     public String url;
 
-    @Meaning("Where On Earth IDentifier, id of position")
+    @Meaning("Where On Earth IDentifier")
     public int woeid;
 
     public class PlaceType {

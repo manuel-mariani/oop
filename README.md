@@ -1,13 +1,9 @@
 ## Introduction
 This application operates as a Java web server using Spring framework, and its main purpose is to view and analyze past
-and current Twitter trends (provided by this [API](https://developer.twitter.com/en/docs/trends/locations-with-trending-topics/api-reference/get-trends-available)).
-
-The user can interrogate the server by using a simple frontend or by calling the rest APIs directly.
-
+and current Twitter trends (provided by this [API](https://developer.twitter.com/en/docs/trends/locations-with-trending-topics/api-reference/get-trends-available)).  
+The user can interrogate the server by using a simple frontend or by calling the rest APIs directly.  
 Once the server is started, it will periodically save the daily trends in a json file, thus providing an archive of past 
 daily trends to the user.
-
-
 
 ### Routes
 Name | Description | Type
@@ -38,9 +34,7 @@ $bt | Is true if the field value is between the arguments | `<fieldName> : $bt: 
 $in | Is true if the field is any of the arguments | `<fieldName> : $in: [<value_1>, ..., <value_n>]` | Set
 $nin | Is true if the field is not any of the arguments | `<fieldName> : $nin: [<value_1>, ..., <value_n>]` | Set
 . | Access a sub field in a field | `<fieldName>.<subFieldName>`|Pseudo-operator 
-
-
-####Notes:
+#### Notes:
 - The filter expressions are case sensitive.
 - The filter expressions can be separated by any amount of spaces.
 - If a value contains spaces, it has to be delimited by quotation marks.
@@ -57,10 +51,16 @@ Get trends of locations that are either in Italy, France or United Kingdom, or t
 Note that the query is in JSON format
 
 ## Frontend
-The frontend design is very simple and barebone, without compromising on functionalities and ease of use.
+The frontend design is very simple and barebone, without compromising on functionalities and ease of use.  
+It's built using HTML and CSS as the view part, Thymeleaf as a very simple controller and the Spring server as the backend.  
+The main functionalities are:
+- Buttons for accessing the REST APIs (metadata, data)
+- Table for displaying the filtered (or unfiltered) trends
+- Text input field for inserting the filter expression
+- A multiple selection field for choosing the desired date between the available ones
+### Screenshot
+![Home screenshot](/readme_assets/screenshot.png)
 
-It's built using HTML and CSS as the view part, Thymeleaf as a very simple controller and the Spring server as the backend.
-###Screenshots
 ## Project management
 
 # Design and structure
