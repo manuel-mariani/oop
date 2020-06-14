@@ -16,7 +16,7 @@ import java.util.HashMap;
 @SpringBootApplication
 @Controller
 public class TwitterTrendsApplication {
-    private static final DataManagerService DMS = new DataManagerService(24, "./data/");
+    private static final DataManagerService DMS = new DataManagerService(1, "./data/");
 
     public static void main(String[] args) {
         SpringApplication.run(TwitterTrendsApplication.class, args);

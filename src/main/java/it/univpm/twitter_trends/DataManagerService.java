@@ -40,8 +40,8 @@ public class DataManagerService {
     private String path;
     private long period;
 
-    public DataManagerService(long period, String path){
-        this.period = period;
+    public DataManagerService(long hoursPeriod, String path){
+        this.period = hoursPeriod;
         this.path = path;
         this.path += (!path.endsWith("/")) ? "/" : "";
     }
