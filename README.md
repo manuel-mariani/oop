@@ -50,7 +50,7 @@ Get trends of locations that are towns and have a country code IT or EN or US
 Get trends of locations that are either in Italy, France or United Kingdom, or that have a place type code equal to 12 (which corresponds to the type 'Country').
 Note that the query is in JSON format
 
-## Frontend
+### Frontend
 The frontend design is very simple and barebone, without compromising on functionalities and ease of use.  
 It's built using HTML and CSS as the view part, Thymeleaf as a very simple controller and the Spring server as the backend.  
 The main functionalities are:
@@ -58,10 +58,21 @@ The main functionalities are:
 - Table for displaying the filtered (or unfiltered) trends
 - Text input field for inserting the filter expression
 - A multiple selection field for choosing the desired date between the available ones
-### Screenshot
-![Home screenshot](/readme_assets/screenshot.png)
+- In case of query error the relative error message will be shown
+#### Screenshot
+![Home screenshot](/readme_assets/frontend.png)
 
-## Project management
+### Backend
+Once the web server starts, a service for managing the data is started.  
+Its features are:
+- Once a day saves the current trends available on the Twitter's API in a folder
+, thus providing an history of past daily trends.
+- The trends are provided to the user via a cache (saved in memory) instead of being always retrieved on a file.  
+This improves the response time at the cost of some memory (around 150-200 KB per daily trends collection).  
+Normally implementing a safe and robust cache is difficult, but since in this project the user can only view data without adding
+or modifying it, a simple caching method was implemented without hassles.
+
+### Project management
 
 # Design and structure
 ### Use case diagram
