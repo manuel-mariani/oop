@@ -63,7 +63,7 @@ The main functionalities are:
 ![Home screenshot](/readme_assets/frontend.png)
 
 ### Backend
-Once the web server starts, a service for managing the data is started.  
+Once the web server starts, a service for managing the data is started. 
 Its features are:
 - Once a day saves the current trends available on the Twitter's API in a folder
 , thus providing an history of past daily trends.
@@ -71,8 +71,6 @@ Its features are:
 This improves the response time at the cost of some memory (around 150-200 KB per daily trends collection).  
 Normally implementing a safe and robust cache is difficult, but since in this project the user can only view data without adding
 or modifying it, a simple caching method was implemented without hassles.
-
-### Project management
 
 # Design and structure
 ### Use case diagram
@@ -101,4 +99,66 @@ returned in the HTTP response body as JSON instead of being formatted in the htm
 Also in these calls, the returned object does not include the metadata and in case of an exception
 the returned object is the exception message.
 
-## Filter design 
+## Filter design
+
+#### Operators structure
+The filter operators can be divided in three separate categories: Comparison, Logical and Set operators.  
+These categories differ both by type of operation and by number and position of arguments, but each one returns either
+true or false:
+
+Operator type | Left argument | Operations |Right argument 
+------------ | -------------  | ------------- | ------------- 
+Comparison | \<fieldName> | \<, \<=, =, >=, > | \<singleValue>
+Set | \<fieldName> | IN, NIN, BT | [<value_1>, ..., <value_n>]
+Logical | |AND, OR, NOT | [<operator_1>, ..., <operator_n>] 
+
+Note: to avoid unnecessary complexity, in the operators NOT and BT the only checked arguments are, respectively, the first one
+and the first two.
+![OP Structure](/readme_assets/Operators_structure.png)
+
+#### Parsing and filter application
+After the user inputs a filter expression (via html form or get url), the string is first
+checked for errors and then cleaned. Then the parser builds a tree of Operators from the expression and finally the built
+tree is applied iteratively to the list of object 
+For example `{"$or": {["country": {"$in": {["Italy", "France", "United Kingdom"]}, "placeType.code" = 12]}` 
+after cleaning becomes `$or:[country:$in:[Italy,France,United Kingdom],placeType.code=12]`.  
+Here you can see that the curly brackets are not necessary but supportet, the formula can contain an arbitrary amout of 
+spaces and that values that contain spaces must be delimited by double quotation marks.  
+![Filter example](/readme_assets/Filter_example.png)  
+
+After the operators' tree is built, it's applied to each item of a collection (in this case a list of trends) returning
+true if the entry matches the condition or false in the other case; thus the filtered collection is made only by the
+entries that match the expression.  
+The main advantage of this approach is that the filter expression string needs only to be parsed once, and once the 
+expression tree is built it only needs to be applied to an object to check if it matches the expression.
+   
+
+
+## Project management
+A very important but underestimated part of the project was the planning of the sequence of implementations.
+I included this section in the readme because i think that having a good plan and idea of what to do before the actual
+ implementation is a fundamental step in every project.
+- [x] Git repository initialization
+- [x] Spring boot initialization
+    - [x] Hello World on browser
+    - [x] Hello World on routes
+- [x] Twitter APIs initialization
+    - [x] GET tests on route (just JSON)
+- [x] Model definition
+- [x] Implement data requests (GET)
+    - [x] REST call (`/api/trends`)
+    - [x] Webpage table (`/home`)
+- [x] Implement metadata requests (GET)
+- [x] Website polishing
+
+After the first revision, some requirements were added (filters and date selection), so therefore the project plan was 
+updated with the new requirements
+- [x] Multiple date handling
+    - [x] Implement periodical saving in server
+    - [x] Handle requests for specific dates
+- [x] Filters implementation
+    - [x] Design and problem definition (see below)
+    - [x] Operator implementation
+    - [x] Parser implementation
+    - [x] Filter interfacing with user
+- [x] Final touches and debugging
