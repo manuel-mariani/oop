@@ -24,7 +24,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class DataManagerService {
-    public static final String API_URL =
+    private static final String API_URL =
             "https://wd4hfxnxxa.execute-api.us-east-2.amazonaws.com/dev/api/1.1/trends/available.json";
     public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

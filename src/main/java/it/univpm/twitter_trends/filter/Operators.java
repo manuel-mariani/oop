@@ -35,7 +35,7 @@ abstract class Operator{
             for (String sfn : subFieldsNames)
                 subFieldValue = subFieldValue.getClass().getField(sfn).get(subFieldValue);
         } catch (Exception ignored){
-            throw new Exception("Field name " + fieldName + " not found");
+            throw new Exception("Field name \"" + fieldName + "\" not found");
         }
         return subFieldValue;
     }

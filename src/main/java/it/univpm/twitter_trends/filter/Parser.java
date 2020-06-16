@@ -26,7 +26,7 @@ public class Parser {
             return new ComparisonOP("EQ", splitEQ[0], splitEQ[1]);
 
         // Check sub string array size, if it's 1, throw exception
-        if (s.length == 1) throw new Exception("Invalid expression, too few arguments");
+        if (s.length == 1) throw new Exception("Invalid expression \"" + expression + "\", too few arguments");
 
         // Check if the first character of the left side of the ':' is a '$'
         // if false, then the sub expression's form is "<fieldname> : <$operator | fieldValue>"
@@ -45,6 +45,8 @@ public class Parser {
             if (s[1].startsWith("$in" ))  return new SetOP("IN" , fieldName, args);
             if (s[1].startsWith("$nin"))  return new SetOP("NIN", fieldName, args);
             if (s[1].startsWith("$bt" ))  return new SetOP("BT" , fieldName, args);
+
+            throw new Exception("Operator \"" + s[1] + "\" not in parsing, check syntax");
         }
         // if true, then the sub expression's form is "$<logical operator> : [$<operators>, ...] "
         else {
@@ -53,7 +55,7 @@ public class Parser {
             if (s[0].startsWith("$or" ))  return new LogicalOP("OR" , parseList(s[1]));
             if (s[0].startsWith("$not"))  return new LogicalOP("NOT", parseList(s[1]));
         }
-        throw new Exception("Operator not found in parsing, check syntax");
+        throw new Exception("Operator \"" + s[0] + "\" not found in parsing, check syntax");
     }
 
     private static List<Operator> parseList(String expression) throws Exception {
