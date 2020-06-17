@@ -40,7 +40,8 @@ $nin | Is true if the field is not any of the arguments | `<fieldName> : $nin: [
 - If a value contains spaces, it has to be delimited by quotation marks.
 - The dot operator can access any depth of nested fields.
 - The filter expression can contain curly brackets (like in a JSON format), but it's not necessary.
-- The comparison operators work on strings too. If the comparator is a $gte or a $lte, it functions like an equal; if its a $lt or a $gt it functions like a not equal.
+- The comparison operators work on strings too. If the comparator is $gte or $lt it functions respectively as an equal 
+or not equal, if it's $lte or $gt always true or false.
 #### Filter expression examples 
 1. `country = Italy` or `country : Italy`  
 Filter trend by the location's country
@@ -102,13 +103,14 @@ the returned object is the exception message.
 ## Filter design
 
 #### Operators structure
-The filter operators can be divided in three separate categories: Comparison, Logical and Set operators.  
-These categories differ both by type of operation and by number and position of arguments, but each one returns either
+The filter operators can be divided in three separate categories: Comparison, Logical and Set operators. There is also
+the dot pseudo-operator which allows the access to a field's sub-field (at any depth).  
+These three categories differ both by type of operation and by number and position of arguments, but each one returns either
 true or false:
 
 Operator type | Left argument | Operations |Right argument 
 ------------ | -------------  | ------------- | ------------- 
-Comparison | \<fieldName> | \<, \<=, =, >=, > | \<singleValue>
+Comparison | \<fieldName> | \<, \<=, ==, >=, > | \<singleValue>
 Set | \<fieldName> | IN, NIN, BT | [<value_1>, ..., <value_n>]
 Logical | |AND, OR, NOT | [<operator_1>, ..., <operator_n>] 
 
@@ -157,7 +159,7 @@ updated with the new requirements
     - [x] Implement periodical saving in server
     - [x] Handle requests for specific dates
 - [x] Filters implementation
-    - [x] Design and problem definition (see below)
+    - [x] Design and problem definition
     - [x] Operator implementation
     - [x] Parser implementation
     - [x] Filter interfacing with user

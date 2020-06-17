@@ -111,7 +111,7 @@ public class DataManagerService {
             try {
                 File file = Paths.get(path + date + ".json").toFile();
                 TrendCollection tc = objectMapper.readValue(file, TrendCollection.class);
-                cachedTrendCollections.put(date, tc);  //TODO max cache size
+                cachedTrendCollections.put(date, tc);  // Max cache size can be implemented here
                 return tc;
             } catch (IOException e) {
                 throw new Exception("Trends of " + date + " not found");
