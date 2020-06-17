@@ -4,10 +4,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Class that generates a tree of Operators from a string expression
+ * Class that contains the static metods to generate a tree of Operators from a string expression
  */
 public class Parser {
 
+    /**
+     * Returns an operator from the passed string expression. The expression must be in the format specified in the
+     * readme found at the readme. The string is first cleaned and checked for syntax errors and then parsed.
+     * @see <a href="https://github.com/manuel-mariani/oop#filters">Filters usage</a>
+     * @param expression the filter's expression
+     * @return           the root operator of the operators tree
+     * @throws Exception the exception containing a message about the error details
+     */
     public static Operator parse(String expression) throws Exception{
         // Clean the expression
         expression = cleanExpression(expression);
@@ -15,6 +23,10 @@ public class Parser {
         return _parse(expression);
     }
 
+    /**
+     * Returns the root operator of the operators tree of the specified expression
+     * @see #parse(String)
+     */
     private static Operator _parse(String expression) throws Exception{
         // Get sub expressions, splitting by the first occurrence of ':' and '='
         String[] splitCOL = splitFirst(expression, ":");
@@ -58,11 +70,15 @@ public class Parser {
         throw new Exception("Operator \"" + s[0] + "\" not found in parsing, check syntax");
     }
 
+    /**
+     * Method that parses an expression (typically enclosed by square brackets and separated by commas) returning a
+     * List of operators. This is used for the operators that take multiple arguments like the Set and Logical operators
+     */
     private static List<Operator> parseList(String expression) throws Exception {
         // Get sub expression between the first and last square brackets
         String strBetweenBrackets = strBetween(expression, "[", "]");
 
-        // Split string by ',' only if they are not between square brackets
+        // Split string by ',' only if they are NOT between square brackets
         List<String> subExpressions = new LinkedList<>();
         StringBuilder subExp = new StringBuilder();
         int nBrackets = 0;
@@ -80,8 +96,9 @@ public class Parser {
                 subExp.append(c);
             }
         }
-        if (subExp.length() > 0)    subExpressions.add(subExp.toString());
+        if (subExp.length() > 0)  subExpressions.add(subExp.toString());
 
+        // Parse the splitted string of sub expressions, forming the returned list
         List<Operator> operators = new LinkedList<>();
         for (String se : subExpressions){
             operators.add(_parse(se));
@@ -89,6 +106,12 @@ public class Parser {
         return operators;
     }
 
+    /**
+     * Returns the string splitted at the FIRST occurrence of the splitter
+     * @param string    the string to split
+     * @param splitter  the split delimiter
+     * @return          the array of sub strings (max size 2)
+     */
     private static String[] splitFirst(String string, String splitter){
         int position = string.indexOf(splitter);
         if (position == -1 || position == string.length())
@@ -99,6 +122,7 @@ public class Parser {
         };
     }
 
+    /** Returns the string between the first (non inclusive) and the last (non inclusive) delimiter string in a string */
     private static String strBetween(String string, String lower, String upper){
         int posLow = string.indexOf(lower);
         int posUpp = string.lastIndexOf(upper);
@@ -107,6 +131,12 @@ public class Parser {
         return string.substring(++posLow, posUpp);
     }
 
+    /**
+     * Returns a cleaned expression from a string. The cleaning
+     * - removes curly brackets
+     * - validates the number and position of square brackets, throwing an exception if it's not valid
+     * - removes spaces if they are NOT between quotation marks
+     */
     private static String cleanExpression(String expression) throws Exception{
         String input = expression;
         StringBuilder output = new StringBuilder();
@@ -131,8 +161,7 @@ public class Parser {
             if (n++ % 2 == 0)  s = s.replaceAll(" ", "");
             output.append(s);
         }
-        // TODO remove
-        System.out.println("clean: " + output.toString());
+
         return output.toString();
     }
 }

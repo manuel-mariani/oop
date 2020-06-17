@@ -12,11 +12,13 @@
         </div>
 
         <div class="main">
+
             <div class="section">
                 <div class="title">API REST</div>
                 <div class="btn" onclick="window.open('./api/metadata')">Metadata</div>
                 <div class="btn" onclick="window.open('./api/trends')">Data</div>
             </div>
+
             <div class="section">
                 <div class="title">Filter</div>
                 <form class="row" method="get">
@@ -26,10 +28,10 @@
                     </select>
                     <input th:type="text" id="expression" name="filter" th:value="${query}"/>
                     <input th:type="submit" class="btn" th:value="OK"/>
-                    <!-- TODO: icona lente + twitter-->
                 </form>
                 <div class="error-box" th:text="${errorMsg}"></div>
             </div>
+
             <div class="section">
                 <table>
                     <thead>
@@ -56,9 +58,11 @@
                 </table>
             </div>
         </div>
+
         <div class="footer">
             <span>Manuel Mariani, OOP course at UNIVPM 2019/20</span>
         </div>
+
     </div>
 </body>
 </html>

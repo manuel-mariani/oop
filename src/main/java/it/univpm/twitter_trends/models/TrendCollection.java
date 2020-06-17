@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Model that represents a collection of Trends. It includes the date of the corresponding Trends.
+ */
 @JsonIgnoreProperties
 public class TrendCollection {
 

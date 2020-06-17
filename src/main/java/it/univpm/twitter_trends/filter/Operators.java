@@ -4,9 +4,34 @@ import java.text.NumberFormat;
 import java.util.List;
 
 
+/**
+ * Abstract class describing a generic operator
+ */
 abstract class Operator{
+    /**
+     * Abstract method that returns the boolean result of an operation relative to an Object target.
+     * @param target     object to apply the operator
+     * @return           the boolean value if the object matches the operator
+     * @throws Exception exception containing a description of the error in the operator
+     */
     abstract boolean isTrue(Object target) throws Exception;
 
+    /**
+     * Compares two object, returning, in case of numbers:
+     * -1 if o1 < o2
+     *  0 if o1 = o2
+     *  1 if o1 > o2
+     *  Note that the second object must be of type String or at least castable to string. This is safe for this
+     *  application because the parser operates on strings and o2 will be either string or a number.
+     *  Also note that this method operates on both strings and numbers. In case of a comparison between strings,
+     *  the result will be:
+     *   0 if o1 equals o2
+     *  -1 if o1 not equals o2
+     *  This generates some limit cases, in the Comparison operators, but has been kept this way to avoid code ulterior
+     *  code complexity. Also greater than and less then operators on strings can have multiple interpretations and
+     *  implementations, so this simple one was preferred.
+     * @throws Exception in case of incompatible object types or values
+     */
     static int compare(Object o1, Object o2) throws Exception {
         // Init and null target exception avoidance
         String s2 = (String) o2;
@@ -26,12 +51,19 @@ abstract class Operator{
         throw new Exception("Comparison error, check if all fields are comparable");
     }
 
+    /**
+     * Returns the value of a field of an object. It supports nested fields, separated by dots
+     * @param target     object from which to get the value of the field
+     * @param fieldName  name of the field or subfields (separated by dots)
+     * @return           the field value
+     * @throws Exception if field is not found
+     */
     static Object getFieldValue(Object target, String fieldName) throws Exception{
         // Split fieldName by '.'
         String[] subFieldsNames = fieldName.split("\\.");
         Object subFieldValue = target;
+        // Iterate through subfields
         try {
-            // Iterate through subfields
             for (String sfn : subFieldsNames)
                 subFieldValue = subFieldValue.getClass().getField(sfn).get(subFieldValue);
         } catch (Exception ignored){
@@ -41,6 +73,10 @@ abstract class Operator{
     }
 }
 
+/**
+ * Operator class that represents Comparison operators
+ * @see <a href="https://github.com/manuel-mariani/oop#filter-design">Filter design readme</a>
+ */
 class ComparisonOP extends Operator {
     String type;
     String fieldName;
@@ -63,6 +99,10 @@ class ComparisonOP extends Operator {
     }
 }
 
+/**
+ * Operator class that represents Logical operators
+ * @see <a href="https://github.com/manuel-mariani/oop#filter-design">Filter design readme</a>
+ */
 class LogicalOP extends Operator {
     String type;
     List<Operator> arguments;
@@ -88,6 +128,10 @@ class LogicalOP extends Operator {
     }
 }
 
+/**
+ * Operator class that represents Set operators
+ * @see <a href="https://github.com/manuel-mariani/oop#filter-design">Filter design readme</a>
+ */
 class SetOP extends Operator {
     String type;
     String fieldName;

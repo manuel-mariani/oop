@@ -114,7 +114,7 @@ Logical | |AND, OR, NOT | [<operator_1>, ..., <operator_n>]
 
 Note: to avoid unnecessary complexity, in the operators NOT and BT the only checked arguments are, respectively, the first one
 and the first two.
-![OP Structure](/readme_assets/Operators_structure.png)
+![OP Structure](/readme_assets/Operators.png)
 
 #### Parsing and filter application
 After the user inputs a filter expression (via html form or get url), the string is first

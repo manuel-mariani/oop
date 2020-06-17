@@ -2,6 +2,10 @@ package it.univpm.twitter_trends.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * Model that represents an entry in the response of the GET call at the Twitter Trends API
+ * https://developer.twitter.com/en/docs/trends/locations-with-trending-topics/api-reference/get-trends-available
+ */
 @JsonIgnoreProperties
 public class Trend {
     @Meaning("Country of origin")
